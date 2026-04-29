@@ -19,14 +19,25 @@ public class TesteMarca {
 
         PMarca persistencia = new PMarca();
 
-        //Marca marca = persistencia.consultar(1);
-        List<Marca> lista = persistencia.listar();
+        Marca marca = new Marca();
+        marca.setCodigo(15);
+        marca.setNome("MARCA ALTERADA COM SUCESSO.");
 
-        for (Marca marca : lista) {
-            System.out.println("Codigo: " + marca.getCodigo());
-            System.out.println("Nome: " + marca.getNome());
+        try {
+            //persistencia.incluir(marca);
+            //persistencia.alterar(marca);
+            persistencia.excluir(marca);
+            
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
+//        Marca marca = persistencia.consultar(1);
+//        List<Marca> lista = persistencia.listar();
+//        for (Marca marca : lista) {
+//            System.out.println("Codigo: " + marca.getCodigo());
+//            System.out.println("Nome: " + marca.getNome());
+//        }
     }
 
 }
