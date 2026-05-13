@@ -6,7 +6,6 @@
 package controller;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
@@ -50,6 +49,7 @@ public class CMarca extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        //http://localhost:8080/ConcessionariaWeb_202601/Cmarca?acao=listar
         String acao = request.getParameter("acao");
         String avancar = "";
 
@@ -61,25 +61,33 @@ public class CMarca extends HttpServlet {
             avancar = LISTAR;
 
         } else if (acao.equalsIgnoreCase("excluir")) {
-            
+
             //Tratativas da exclusão de marcas
             int codigo = Integer.parseInt(request.getParameter("codigo"));
             Marca marca = new Marca();
             marca.setCodigo(codigo);
-            
+
             try {
                 nMarca.excluir(marca);
             } catch (SQLException ex) {
                 Logger.getLogger(CMarca.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
             //Voltar para a listagem, atualizando a lista
             List<Marca> lista = nMarca.listar();
             request.setAttribute("listamarcas", lista);
             avancar = LISTAR;
-            
+
+        } else if (acao.equalsIgnoreCase("alterar")) {
+
+            int codigo = Integer.parseInt(request.getParameter("codigo"));
+            Marca marca = nMarca.consultar(codigo);
+            request.setAttribute("marca", marca);
+            avancar = MANTER;
+
         } else {
             //Opção padrao - caso o usuário não informe nenhuma ação na URL
+            avancar = MANTER;
         }
 
         //Navegar para a tela que foi setada na variável avancar
@@ -100,6 +108,34 @@ public class CMarca extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        Marca marca = new Marca();
+
+        String codigo = request.getParameter("codigo");
+        String nome = request.getParameter("nome");
+
+        if (codigo != null && !codigo.isEmpty()) {
+            marca.setCodigo(Integer.parseInt(codigo));
+        }
+        marca.setNome(nome);
+
+        String avancar = "";
+
+        try {
+
+            nMarca.salvar(marca);
+
+            List<Marca> lista = nMarca.listar();
+            request.setAttribute("listamarcas", lista);
+            avancar = LISTAR;
+
+        } catch (Exception e) {
+            Logger.getLogger(e.getMessage());
+            avancar = MANTER;
+        }
+
+        //Navegar para a tela que foi setada na variável avancar
+        RequestDispatcher tela = request.getRequestDispatcher(avancar);
+        tela.forward(request, response);
     }
 
     /**

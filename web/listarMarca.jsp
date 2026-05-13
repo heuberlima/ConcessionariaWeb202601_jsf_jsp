@@ -13,6 +13,7 @@
         <title>Listar Marcas</title>
     </head>
     <body>
+        <jsp:include page="menu.jsp" />
         <br/>
         <br/>
         <h4>Lista de Marcas</h4>
@@ -31,13 +32,13 @@
                             <tr>
                                 <td><c:out value="${marca.codigo}"/></td>
                                 <td><c:out value="${marca.nome}"/></td>
-                                <td><a href="">Alterar</a></td>
+                                <td><a href="CMarca?acao=alterar&codigo=<c:out value="${marca.codigo}" />">Alterar</a></td>
                                 <td><a href="CMarca?acao=excluir&codigo=<c:out value="${marca.codigo}" />" onclick="return confirm('Confirma a exclusão?')" >Excluir</a></td>
                             </tr>
                         </c:forEach>
                     </tbody>
                     <tfoot>
-                        <td align="center" colspan="4"><a href="">Nova Marca</a></td>
+                        <td align="center" colspan="4"><a href="CMarca?acao=incluir">Nova Marca</a></td>
                     </tfoot>
                 </table>
             </div>
